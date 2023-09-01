@@ -4,16 +4,21 @@
 class Quadcopter
 {
 private:
-	glm::vec3 m_force{};
-	glm::vec3 m_torque{};
+	glm::dvec3 m_force{};
+	glm::dvec3 m_torque{};
 
 public:
-	float mass = 1.0f;
-	glm::vec3 position{};
+	double mass = 1.0f;
+	glm::dvec3 position{};
 	glm::quat orientation{};
-	glm::vec3 velocity{};
-	glm::vec3 angular_velocity{};
-	glm::mat3 inertia{};
-	glm::mat3 inverse_inertia{};
+	glm::dvec3 velocity{};
+	glm::dvec3 angular_velocity{};
+
+	glm::dvec3 calculateFriction(double frictionConstant)
+	{
+		return -frictionConstant * velocity;
+	}
+
+
 };
 
