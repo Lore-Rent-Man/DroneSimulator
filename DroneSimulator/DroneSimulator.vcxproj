@@ -148,11 +148,13 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="Motor.cpp" />
     <ClCompile Include="Quadcopter.cpp" />
+    <ClCompile Include="Simulator.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Motor.h" />
     <ClInclude Include="Quadcopter.h" />
+    <ClInclude Include="Simulator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
