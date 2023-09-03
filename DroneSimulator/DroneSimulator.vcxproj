@@ -146,15 +146,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />
+    <ClCompile Include="Line.h" />
     <ClCompile Include="Motor.cpp" />
     <ClCompile Include="Quadcopter.cpp" />
     <ClCompile Include="Simulator.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Circle.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="Motor.h" />
     <ClInclude Include="Quadcopter.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="Simulator.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fragmentshader.glsl" />
+    <None Include="vertexshader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

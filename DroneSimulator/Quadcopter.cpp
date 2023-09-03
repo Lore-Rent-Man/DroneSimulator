@@ -1,4 +1,1 @@
 #include "Quadcopter.h"
-
-
-
