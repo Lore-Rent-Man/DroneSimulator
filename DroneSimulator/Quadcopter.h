@@ -27,8 +27,8 @@ public:
 	glm::vec3 cross[4] = {
 		glm::vec3 { -1, 0, 0 },
 		glm::vec3 { 1, 0, 0 },
-		glm::vec3 { 0, -1, 0 },
-		glm::vec3 { 0, 1, 0 },
+		glm::vec3 { 0, 0, -1 },
+		glm::vec3 { 0, 0, 1 },
 	};
 
 	Circle r_motor[4] = {

@@ -81,10 +81,10 @@ public:
         float top = 0.5;
         vertices = {
             //x y z
-            right, bottom, 0, 1.0, -1.0,
-            right, top, 0, 1.0, 1.0,
-            left, top, 0, -1.0, 1.0,
-            left, bottom, 0, -1.0, -1.0,
+            right, 0, bottom, 1.0, -1.0,
+            right, 0, top, 1.0, 1.0,
+            left, 0, top, -1.0, 1.0,
+            left, 0, bottom, -1.0, -1.0,
         };
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
