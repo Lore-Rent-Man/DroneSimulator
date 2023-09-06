@@ -101,7 +101,7 @@ int main()
         glm::mat4 model = glm::translate(glm::mat4(1.0), glm::vec3(0.0, glfwGetTime() * 0.5, 0.0));
         // pass transformation matrices to the shader
 
-        q.setMVP(model * projection * view);
+        q.setMVP(projection * view * model);
         q.drawQuadcopter();
 
         // render boxes

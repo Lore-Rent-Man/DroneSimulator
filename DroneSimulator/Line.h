@@ -12,13 +12,14 @@
 #include <iostream>
 
 #include "Object.h"
+#include "Shader.h"
 
 using namespace std;
 using namespace glm;
 
 class Line : public Object {
-    int shaderProgram;
     unsigned int VBO, VAO;
+    Shader s = Shader("objectvertexshader.glsl", "objectfragmentshader.glsl");
     vec3 startPoint;
     vec3 endPoint;
 public:
@@ -26,44 +27,6 @@ public:
 
         startPoint = start;
         endPoint = end;
-        MVP = mat4(1.0f);
-
-        const char* vertexShaderSource = "#version 330 core\n"
-            "layout (location = 0) in vec3 aPos;\n"
-            "uniform mat4 MVP;\n"
-            "void main()\n"
-            "{\n"
-            "   gl_Position = MVP * vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-            "}\0";
-        const char* fragmentShaderSource = "#version 330 core\n"
-            "out vec4 FragColor;\n"
-            "uniform vec3 color;\n"
-            "void main()\n"
-            "{\n"
-            "   FragColor = vec4(color, 1.0f);\n"
-            "}\n\0";
-
-        // vertex shader
-        int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-        glCompileShader(vertexShader);
-        // check for shader compile errors
-
-        // fragment shader
-        int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-        glCompileShader(fragmentShader);
-        // check for shader compile errors
-
-        // link shaders
-        shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, vertexShader);
-        glAttachShader(shaderProgram, fragmentShader);
-        glLinkProgram(shaderProgram);
-        // check for linking errors
-
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader);
 
         vertices = {
              start.x, start.y, start.z,
@@ -86,18 +49,16 @@ public:
     }
 
     void draw() {
-        glUseProgram(shaderProgram);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "MVP"), 1, GL_FALSE, &MVP[0][0]);
-        glUniform3fv(glGetUniformLocation(shaderProgram, "color"), 1, &color[0]);
+        s.use();
+        s.setMat4("MVP", MVP);
+        s.setVec3("color", color);
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_LINES, 0, 2);
     }
 
     ~Line() {
-
         glDeleteVertexArrays(1, &VAO);
         glDeleteBuffers(1, &VBO);
-        glDeleteProgram(shaderProgram);
     }
 };

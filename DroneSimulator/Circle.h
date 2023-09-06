@@ -12,64 +12,16 @@
 #include <iostream>
 
 #include "Object.h"
+#include "Shader.h"
 
 using namespace std;
 using namespace glm;
 
 class Circle : public Object {
-    int shaderProgram;
     unsigned int VBO, VAO;
+    Shader s = Shader("circlevertexshader.glsl", "circlefragmentshader.glsl");
 public:
     Circle() {
-
-        const char* vertexShaderSource = "#version 330 core\n"
-            "layout (location = 0) in vec3 pos;\n"
-            "layout (location = 1) in vec2 value;\n"
-            "uniform mat4 MVP;\n"
-            "varying vec2 val;\n"
-            "void main()\n"
-            "{\n"
-            "   gl_Position = MVP * vec4(pos.x, pos.y, pos.z, 1.0);\n"
-            "   val = value;\n"
-            "}\0";
-        const char* fragmentShaderSource = "#version 330 core\n"
-            "out vec4 FragColor;\n"
-            "uniform vec3 color;\n"
-            "varying vec2 val;\n"
-            "void main()\n"
-            "{\n"
-            "   float R = 1.0;\n" 
-            "   float R2 = 0.9;\n"
-            "   float dist = sqrt(dot(val, val));\n"
-            "   if (dist >= R || dist <= R2)\n"
-            "{\n"
-            "   discard;\n"
-            "}\n"
-            "   FragColor = vec4(color, 1.0f);\n"
-            "}\n\0";
-
-        // vertex shader
-        int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-        glCompileShader(vertexShader);
-        // check for shader compile errors
-
-        // fragment shader
-        int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-        glCompileShader(fragmentShader);
-        // check for shader compile errors
-
-
-        // link shaders
-        shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, vertexShader);
-        glAttachShader(shaderProgram, fragmentShader);
-        glLinkProgram(shaderProgram);
-        // check for linking errors
-
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader);
 
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
@@ -81,10 +33,10 @@ public:
         float top = 0.5;
         vertices = {
             //x y z
-            right, 0, bottom, 1.0, -1.0,
-            right, 0, top, 1.0, 1.0,
-            left, 0, top, -1.0, 1.0,
-            left, 0, bottom, -1.0, -1.0,
+            right, 0.0f, bottom, 1.0, -1.0,
+            right, 0.0f, top, 1.0, 1.0,
+            left, 0.0f, top, -1.0, 1.0,
+            left, 0.0f, bottom, -1.0, -1.0,
         };
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -101,18 +53,15 @@ public:
     }
 
     void draw() {
-        glUseProgram(shaderProgram);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "MVP"), 1, GL_FALSE, &MVP[0][0]);
-        glUniform3fv(glGetUniformLocation(shaderProgram, "color"), 1, &color[0]);
-
+        s.use();
+        s.setMat4("MVP", MVP);
+        s.setVec3("color", color);
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     }
 
     ~Circle() {
-
         glDeleteVertexArrays(1, &VAO);
         glDeleteBuffers(1, &VBO);
-        glDeleteProgram(shaderProgram);
     }
 };

@@ -61,10 +61,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="vertexshader.glsl">
+    <None Include="objectvertexshader.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="fragmentshader.glsl">
+    <None Include="objectfragmentshader.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="circlevertexshader.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="circlefragmentshader.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>
