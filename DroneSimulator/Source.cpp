@@ -30,6 +30,10 @@ bool firstMouse = true;
 float deltaTime = 0.05f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
+//Basic Quadcopter Variables
+float k = 1.0f;
+float b = 1.0f;
+
 int main()
 {
     // glfw: initialize and configure
@@ -72,7 +76,7 @@ int main()
     glm::vec3 start{ 0, 0, 0 };
     glm::vec3 end{ 5, 5, 5 };
 
-    Quadcopter q = Quadcopter();
+    Quadcopter q = Quadcopter(k, b);
     q.setColor(glm::vec3{ 0.0, 0.0, 0.0 });
 
     // render loop
@@ -94,12 +98,9 @@ int main()
          // bind textures on corresponding texture units
 
         // activate shader
-
-        // create transformations
         glm::mat4 view = camera.GetViewMatrix(); // make sure to initialize matrix to identity matrix first
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        glm::mat4 model = glm::translate(glm::mat4(1.0), glm::vec3(0.0, glfwGetTime() * 0.5, 0.0));
-        // pass transformation matrices to the shader
+        glm::mat4 model = q.update(glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }, deltaTime * 0.25);
 
         q.setMVP(projection * view * model);
         q.drawQuadcopter();

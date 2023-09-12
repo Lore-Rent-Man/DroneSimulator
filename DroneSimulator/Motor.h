@@ -6,15 +6,22 @@ class Motor
 {
 private:
 
-	float baseCurrent;
 	float k;
 	float b;
-	float Radius;
 
 public:
 
-	float inputCurrent;
-	int motorNumber;
+	Motor()
+	{
+		this->k = 0;
+		this->b = 0;
+	}
+
+	Motor(float k, float b)
+	{
+		this->k = k;
+		this->b = b;
+	}
 
 	float calcThrust(float aVel)
 	{

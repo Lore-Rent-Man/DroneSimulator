@@ -18,7 +18,7 @@ public:
 	float mass = 1.0f;
 	float frictionConstant = 0.016f;
 	glm::vec3 position{};
-	glm::quat orientation{};
+	glm::quat orientation{0.0f, 0.0f, 0.0f, 1.0f};
 	glm::vec3 velocity{};
 	glm::vec3 angular_velocity{};
 	glm::vec3 acceleration{};
@@ -50,6 +50,13 @@ public:
 	Line cr1 = Line(cross[0], cross[1]);
 	Line cr2 = Line(cross[2], cross[3]);
 
+	Quadcopter(float k, float b)
+	{
+		for (int i = 0; i < 4; i++) {
+			motors[i] = pair<int, Motor>{ i, Motor(k, b) };
+		}
+	}
+
 	glm::vec3 calculateThrustVector(glm::vec4 aVel)
 	{
 		float totalThrust = 0.0f;
@@ -63,12 +70,14 @@ public:
 	glm::vec3 calculateTorqueVector(glm::vec4 aVel)
 	{
 		float torque_x = glm::length(cross[0]) * motors[0].second.calcThrust(aVel[0]) - glm::length(cross[2]) * motors[2].second.calcThrust(aVel[2]);
-		float torque_y = glm::length(cross[1]) * motors[1].second.calcThrust(aVel[1]) - glm::length(cross[3]) * motors[3].second.calcThrust(aVel[3]);
-		float torque_z = 0;
+		float torque_z = glm::length(cross[1]) * motors[1].second.calcThrust(aVel[1]) - glm::length(cross[3]) * motors[3].second.calcThrust(aVel[3]);
+		float torque_y = 0;
 		for (int i = 0; i < 4; i++)
 		{
-			torque_z += motors[i].second.calcTorque(aVel[i]);
+			torque_y += motors[i].second.calcTorque(aVel[i]);
 		}
+		cout << torque_x << ", " << torque_y << ", " << torque_z << endl;
+		return glm::vec3{ torque_x, torque_y, torque_z };
 	}
 
 	glm::vec3 calculateAcceleration(glm::vec4 aVel)
@@ -113,7 +122,7 @@ public:
 		return glm::inverse(inertia) * (torque - glm::cross(angular_velocity, inertia * angular_velocity));
 	}
 
-	void update(glm::vec4 input, float dt)
+	glm::mat4 update(glm::vec4 input, float dt)
 	{
 		glm::vec3 a = calculateAcceleration(input);
 		glm::vec3 anga = calculateAngularAcceleration(input);
@@ -123,6 +132,10 @@ public:
 		orientation = orientation * time_derivative;
 		velocity += dt * a;
 		position += dt * velocity;
+
+		glm::mat4 rotation = glm::mat4_cast(orientation);
+		glm::mat4 translation = glm::translate(glm::mat4(1.0f), position);
+		return translation * rotation;
 	}
 
 	void setMVP(glm::mat4 mvp)
