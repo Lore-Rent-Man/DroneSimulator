@@ -1,10 +1,12 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <list>
 #include "Motor.h"
 #include "Line.h"
 #include "Circle.h"
+
 
 using namespace std;
 
@@ -15,9 +17,10 @@ private:
 	glm::vec3 m_torque{};
 	float gravity = 9.81;
 public:
-	float mass = 1.0f;
+	float mass = 0.05f; //kg
 	float frictionConstant = 0.016f;
-	glm::vec3 position{};
+	float dragfrictionConstant = 10.0f;
+	glm::vec3 position{0.0f, 5.0f, 0.0f};
 	glm::quat orientation{0.0f, 0.0f, 0.0f, 1.0f};
 	glm::vec3 velocity{};
 	glm::vec3 angular_velocity{};
@@ -76,50 +79,22 @@ public:
 		{
 			torque_y += motors[i].second.calcTorque(aVel[i]);
 		}
-		cout << torque_x << ", " << torque_y << ", " << torque_z << endl;
 		return glm::vec3{ torque_x, torque_y, torque_z };
 	}
 
 	glm::vec3 calculateAcceleration(glm::vec4 aVel)
 	{
 		glm::vec3 g { 0.0f, -gravity, 0.0f };
-		glm::vec3 f = velocity * frictionConstant;
+		glm::vec3 f = -velocity * frictionConstant;
 		glm::vec3 T = glm::mat3_cast(orientation) * calculateThrustVector(aVel);
-		return g + 1 / mass * T + f;
-	}
-
-	glm::vec3 AngularVelocityToTimeDerivative(glm::vec3 a)
-	{
-		glm::vec3 euler_angles = glm::eulerAngles(orientation);
-		float phi = euler_angles[0];
-		float theta = euler_angles[1];
-		float psi = euler_angles[2];
-		glm::mat3 W{
-			1.0f, 0.0f, -sin(theta),
-			0.0f, cos(phi), cos(theta) * sin(phi),
-			0.0f, -sin(phi), cos(theta) * cos(phi)
-		};
-		return glm::inverse(W) * a;
-	}
-
-	glm::vec3 TimeDerivativeToAngularVelocity(glm::vec3 t)
-	{
-		glm::vec3 euler_angles = glm::eulerAngles(orientation);
-		float phi = euler_angles[0];
-		float theta = euler_angles[1];
-		float psi = euler_angles[2];
-		glm::mat3 W{
-			1.0f, 0.0f, -sin(theta),
-			0.0f, cos(phi), cos(theta) * sin(phi),
-			0.0f, -sin(phi), cos(theta) * cos(phi)
-		};
-		return W * t;
+		return g - 1 / mass * T + f;
 	}
 
 	glm::vec3 calculateAngularAcceleration(glm::vec4 aVel)
 	{
 		glm::vec3 torque = calculateTorqueVector(aVel);
-		return glm::inverse(inertia) * (torque - glm::cross(angular_velocity, inertia * angular_velocity));
+		glm::vec3 drag = angular_velocity * dragfrictionConstant;
+		return glm::inverse(inertia) * (torque - glm::cross(angular_velocity, inertia * angular_velocity)) - drag;
 	}
 
 	glm::mat4 update(glm::vec4 input, float dt)
@@ -128,7 +103,7 @@ public:
 		glm::vec3 anga = calculateAngularAcceleration(input);
 
 		angular_velocity += anga * dt;
-		glm::vec3 time_derivative = AngularVelocityToTimeDerivative(angular_velocity);
+		glm::quat time_derivative = glm::quat(angular_velocity);
 		orientation = orientation * time_derivative;
 		velocity += dt * a;
 		position += dt * velocity;
@@ -164,6 +139,5 @@ public:
 			r_motor[i].draw();
 		}
 	}
-
 };
 

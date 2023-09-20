@@ -150,16 +150,15 @@
     <ClCompile Include="Motor.cpp" />
     <ClCompile Include="Quadcopter.cpp" />
     <ClCompile Include="Simulator.cpp" />
-    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Circle.h" />
+    <ClInclude Include="Axes.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Motor.h" />
     <ClInclude Include="Quadcopter.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="Simulator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="circlefragmentshader.glsl" />
