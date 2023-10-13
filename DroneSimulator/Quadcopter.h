@@ -6,7 +6,7 @@
 #include "Motor.h"
 #include "Line.h"
 #include "Circle.h"
-
+#include <octree_code/octree.h>
 
 using namespace std;
 

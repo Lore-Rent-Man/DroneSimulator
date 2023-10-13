@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Fluid.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Line.h" />
     <ClCompile Include="Motor.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Axes.h" />
+    <ClInclude Include="Fluid.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Motor.h" />
     <ClInclude Include="Quadcopter.h" />

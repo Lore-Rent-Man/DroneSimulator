@@ -103,7 +103,10 @@ int main()
         // activate shader
         glm::mat4 view = camera.GetViewMatrix(); // make sure to initialize matrix to identity matrix first
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        glm::mat4 model = q.update(glm::vec4{ 1.0f, 0.99f, 1.0f, 0.99f }, deltaTime);
+        
+
+
+        glm::mat4 model = q.update(glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }, deltaTime);
         
         a.setMVP(projection * view);
         a.draw();
