@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DoubleFBO.cpp" />
+    <ClCompile Include="FBO.cpp" />
     <ClCompile Include="Fluid.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Line.h" />
@@ -156,6 +158,8 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Axes.h" />
+    <ClInclude Include="DoubleFBO.h" />
+    <ClInclude Include="FBO.h" />
     <ClInclude Include="Fluid.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Motor.h" />
@@ -165,6 +169,7 @@
   <ItemGroup>
     <None Include="circlefragmentshader.glsl" />
     <None Include="circlevertexshader.glsl" />
+    <None Include="fluidfragmentshader.glsl" />
     <None Include="objectfragmentshader.glsl" />
     <None Include="objectvertexshader.glsl" />
   </ItemGroup>

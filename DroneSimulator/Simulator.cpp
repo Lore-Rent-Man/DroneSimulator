@@ -35,6 +35,9 @@ float lastFrame = 0.0f;
 float k = 0.12265f;
 float b = 0.01f;
 
+//Fluid Simulation Variables
+const int SIZE = 100;
+
 int main()
 {
     // glfw: initialize and configure
@@ -82,6 +85,8 @@ int main()
 
     Axes a = Axes();
 
+    Circle c = Circle();
+
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -103,8 +108,6 @@ int main()
         // activate shader
         glm::mat4 view = camera.GetViewMatrix(); // make sure to initialize matrix to identity matrix first
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        
-
 
         glm::mat4 model = q.update(glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }, deltaTime);
         
@@ -113,6 +116,10 @@ int main()
 
         q.setMVP(projection * view * model);
         q.drawQuadcopter();
+
+        c.setColor(glm::vec3{ 0.0, 0.0, 0.0 });
+        c.setMVP(projection * view);
+        c.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

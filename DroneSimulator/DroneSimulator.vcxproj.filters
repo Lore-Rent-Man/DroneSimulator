@@ -36,6 +36,12 @@
     <ClCompile Include="Fluid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DoubleFBO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FBO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Quadcopter.h">
@@ -62,6 +68,12 @@
     <ClInclude Include="Fluid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DoubleFBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="objectvertexshader.glsl">
@@ -74,6 +86,9 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="circlefragmentshader.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="fluidfragmentshader.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

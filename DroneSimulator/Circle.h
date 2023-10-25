@@ -20,6 +20,7 @@ using namespace glm;
 class Circle : public Object {
     unsigned int VBO, VAO;
     Shader s = Shader("circlevertexshader.glsl", "circlefragmentshader.glsl");
+    unsigned int texture;
 public:
     Circle() {
 
@@ -39,6 +40,8 @@ public:
             left, 0.0f, bottom, -1.0, -1.0,
         };
 
+        const int SIZE = 100;
+
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
 
@@ -50,12 +53,35 @@ public:
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
+        glGenTextures(1, &texture);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        float x[SIZE][SIZE][3];
+        /*for (int i = 0; i < SIZE; i++)
+        {
+            for (int j = 0; j < SIZE; j++)
+            {
+                x[i][j][0] = 1.0f;
+                x[i][j][1] = 1.0f;
+                x[i][j][2] = 1.0f;
+            }
+        }*/
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SIZE, SIZE, 0, GL_RGB, GL_FLOAT, x);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        s.use();
+        glUniform1i(glGetUniformLocation(s.ID, "texture1"), 0);
     }
 
     void draw() {
         s.use();
         s.setMat4("MVP", MVP);
         s.setVec3("color", color);
+        glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     }
