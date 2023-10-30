@@ -16,6 +16,9 @@
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{830201ea-0a50-495b-b257-85e76c72831c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Fluid Shaders">
+      <UniqueIdentifier>{4877c36e-dbab-4436-9d7b-c0f8c50c256d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simulator.cpp">
@@ -88,8 +91,8 @@
     <None Include="circlefragmentshader.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="fluidfragmentshader.glsl">
-      <Filter>Source Files\Shaders</Filter>
+    <None Include="basefluidvertexshader.glsl">
+      <Filter>Source Files\Fluid Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

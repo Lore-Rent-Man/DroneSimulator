@@ -167,9 +167,9 @@
     <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="basefluidvertexshader.glsl" />
     <None Include="circlefragmentshader.glsl" />
     <None Include="circlevertexshader.glsl" />
-    <None Include="fluidfragmentshader.glsl" />
     <None Include="objectfragmentshader.glsl" />
     <None Include="objectvertexshader.glsl" />
   </ItemGroup>

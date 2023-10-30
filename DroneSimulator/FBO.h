@@ -17,6 +17,7 @@ using namespace glm;
 
 class FBO
 {
+private:
 	int lx, ly, lz;
 public:
 	unsigned int texture, ID;
