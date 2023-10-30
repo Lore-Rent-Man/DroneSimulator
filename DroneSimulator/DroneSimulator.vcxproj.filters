@@ -94,5 +94,20 @@
     <None Include="basefluidvertexshader.glsl">
       <Filter>Source Files\Fluid Shaders</Filter>
     </None>
+    <None Include="advectionfragmentshader.glsl">
+      <Filter>Source Files\Fluid Shaders</Filter>
+    </None>
+    <None Include="divergencefragmentshader.glsl">
+      <Filter>Source Files\Fluid Shaders</Filter>
+    </None>
+    <None Include="pressurefragmentshader.glsl">
+      <Filter>Source Files\Fluid Shaders</Filter>
+    </None>
+    <None Include="gradientfragmentshader.glsl">
+      <Filter>Source Files\Fluid Shaders</Filter>
+    </None>
+    <None Include="clearfragmentshader.glsl">
+      <Filter>Source Files\Fluid Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

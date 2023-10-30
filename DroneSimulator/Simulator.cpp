@@ -12,6 +12,7 @@
 #include "Circle.h"
 #include "Camera.h"
 #include "Axes.h"
+#include "Fluid.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -86,6 +87,10 @@ int main()
     Axes a = Axes();
 
     Circle c = Circle();
+
+    Fluid f = Fluid(SIZE, SIZE, SIZE);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // render loop
     // -----------

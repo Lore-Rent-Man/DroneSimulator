@@ -167,11 +167,16 @@
     <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="advectionfragmentshader.glsl" />
     <None Include="basefluidvertexshader.glsl" />
     <None Include="circlefragmentshader.glsl" />
     <None Include="circlevertexshader.glsl" />
+    <None Include="clearfragmentshader.glsl" />
+    <None Include="divergencefragmentshader.glsl" />
+    <None Include="gradientfragmentshader.glsl" />
     <None Include="objectfragmentshader.glsl" />
     <None Include="objectvertexshader.glsl" />
+    <None Include="pressurefragmentshader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

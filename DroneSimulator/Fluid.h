@@ -22,19 +22,19 @@ using namespace glm;
 class Fluid
 {
 private:
-    
+	Shader advectionShader = Shader("basefluidvertexshader.glsl", "advectionfragmentshader.glsl");
+	Shader divergenceShader = Shader("basefluidvertexshader.glsl", "divergencefragmentshader.glsl");
+	Shader pressureShader = Shader("basefluidvertexshader.glsl", "pressurefragmentshader.glsl");
+	Shader gradientSubtractShader = Shader("basefluidvertexshader.glsl", "gradientfragmentshader.glsl");
+	Shader clearShader = Shader("basefluidvertexshader.glsl", "clearfragmentshader.glsl");
 public:
-
-	Fluid(int lx, int ly, int lz);
 	DoubleFBO* velocity;
 	DoubleFBO* pressure;
 
-	void Advection() {
+	Fluid(int lx, int ly, int lz);
 
-	}
-
-	void ViscousDiffusion() {
-
+	void step(float deltaTime) {
+		glDisable(GL_BLEND);
 	}
 };
 
