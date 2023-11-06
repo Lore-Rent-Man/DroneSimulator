@@ -27,14 +27,19 @@ private:
 	Shader pressureShader = Shader("basefluidvertexshader.glsl", "pressurefragmentshader.glsl");
 	Shader gradientSubtractShader = Shader("basefluidvertexshader.glsl", "gradientfragmentshader.glsl");
 	Shader clearShader = Shader("basefluidvertexshader.glsl", "clearfragmentshader.glsl");
+
+	unsigned int blitBuffer, vao;
+	int lx, ly, lz;
+
 public:
 	DoubleFBO* velocity;
 	DoubleFBO* pressure;
+	FBO* divergence;
 
 	Fluid(int lx, int ly, int lz);
 
-	void step(float deltaTime) {
-		glDisable(GL_BLEND);
-	}
+	void step(float deltaTime);
+
+	void blit(FBO* target, bool clear = false);
 };
 

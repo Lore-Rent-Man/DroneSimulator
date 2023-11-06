@@ -37,7 +37,7 @@ float k = 0.12265f;
 float b = 0.01f;
 
 //Fluid Simulation Variables
-const int SIZE = 100;
+const int SIZE = 8;
 
 int main()
 {
@@ -78,7 +78,7 @@ int main()
     // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
     // -------------------------------------------------------------------------------------------
 
-    glm::vec3 start{ 0, 0, 0 };
+    /*glm::vec3 start{ 0, 0, 0 };
     glm::vec3 end{ 5, 5, 5 };
 
     Quadcopter q = Quadcopter(k, b);
@@ -86,11 +86,21 @@ int main()
 
     Axes a = Axes();
 
-    Circle c = Circle();
+    Circle c = Circle();*/
+
+    GLint drawFboId = 0, readFboId = 0;
+
+    glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &drawFboId);
+    glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &readFboId);
+
+    cout << drawFboId << " " << readFboId << endl;
+
 
     Fluid f = Fluid(SIZE, SIZE, SIZE);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &drawFboId);
+    glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &readFboId);
+
 
     // render loop
     // -----------
@@ -111,20 +121,20 @@ int main()
          // bind textures on corresponding texture units
 
         // activate shader
-        glm::mat4 view = camera.GetViewMatrix(); // make sure to initialize matrix to identity matrix first
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        //glm::mat4 view = camera.GetViewMatrix(); // make sure to initialize matrix to identity matrix first
+        //glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
-        glm::mat4 model = q.update(glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }, deltaTime);
-        
-        a.setMVP(projection * view);
-        a.draw();
+        //glm::mat4 model = q.update(glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }, deltaTime);
+        //
+        //a.setMVP(projection * view);
+        //a.draw();
 
-        q.setMVP(projection * view * model);
-        q.drawQuadcopter();
+        //q.setMVP(projection * view * model);
+        //q.drawQuadcopter();
 
-        c.setColor(glm::vec3{ 0.0, 0.0, 0.0 });
-        c.setMVP(projection * view);
-        c.draw();
+        //c.setColor(glm::vec3{ 0.0, 0.0, 0.0 });
+        //c.setMVP(projection * view);
+        //c.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

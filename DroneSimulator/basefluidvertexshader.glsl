@@ -2,7 +2,7 @@
 
 precision highp float;
 
-attribute vec3 aPosition;
+layout (location = 0) in vec3 aPosition;
 varying vec3 vUv;
 varying vec3 vL;
 varying vec3 vR;

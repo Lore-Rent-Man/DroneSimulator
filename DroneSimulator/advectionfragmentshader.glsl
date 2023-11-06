@@ -14,5 +14,5 @@ void main () {
     vec3 coord = vUv - dt * texture3D(uVelocity, vUv).xyz * texelSize;
     vec4 result = texture3D(uSource, coord);
     float decay = 1.0 + dissipation * dt;
-    gl_FragColor = result / decay;
+    gl_FragColor = result/decay;
 }
