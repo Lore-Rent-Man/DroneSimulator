@@ -172,6 +172,7 @@
     <None Include="circlefragmentshader.glsl" />
     <None Include="circlevertexshader.glsl" />
     <None Include="clearfragmentshader.glsl" />
+    <None Include="curlfragmentshader.glsl" />
     <None Include="displayfragmentshader.glsl" />
     <None Include="divergencefragmentshader.glsl" />
     <None Include="gradientfragmentshader.glsl" />

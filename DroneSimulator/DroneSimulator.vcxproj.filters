@@ -115,5 +115,8 @@
     <None Include="displayfragmentshader.glsl">
       <Filter>Source Files\Fluid Shaders</Filter>
     </None>
+    <None Include="curlfragmentshader.glsl">
+      <Filter>Source Files\Fluid Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

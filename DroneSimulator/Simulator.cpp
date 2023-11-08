@@ -23,7 +23,7 @@ void processInput(GLFWwindow* window);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_HEIGHT = 800;
 const float ASPECT_RATIO = SCR_WIDTH / SCR_HEIGHT;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));
@@ -32,7 +32,7 @@ float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
 // timing
-float deltaTime = 0.05f;	// time between current frame and last frame
+float deltaTime = 0.01667f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
 //Basic Quadcopter Variables
@@ -153,23 +153,20 @@ int main()
                 f.splat(sB[0]);
             }
         }
-        f.step(deltaTime);
-        f.render();
 
-        glFlush();
-        Sleep(10);
+        f.step(frameRate);
+        f.render();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
+    
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
-    //glDeleteVertexArrays(1, &vao);
-    //glDeleteBuffers(1, &blitBuffer);
+
     glfwTerminate();
     return 0;
 }

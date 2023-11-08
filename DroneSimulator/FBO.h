@@ -24,5 +24,6 @@ public:
 
 	FBO(int lx, int ly, int lz, GLint interalFormat, GLint format, GLint type, GLint param);
 	unsigned int attach(unsigned int id);
+	~FBO();
 };
 

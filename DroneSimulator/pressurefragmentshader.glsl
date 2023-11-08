@@ -19,12 +19,10 @@ out vec4 FragColor;
 void main () {
     float L = texture3D(uPressure, vL).x;
     float R = texture3D(uPressure, vR).x;
-    float F = texture3D(uPressure, vF).x;
-    float B = texture3D(uPressure, vB).x;
     float U = texture3D(uPressure, vU).x;
     float D = texture3D(uPressure, vD).x;
     float C = texture3D(uPressure, vUv).x;
     float divergence = texture3D(uDivergence, vUv).x;
-    float pressure = (L + R + B + F + D + U - divergence) / 6;
+    float pressure = (L + R + D + U - divergence) * 0.25;
     FragColor = vec4(pressure, 0.0, 0.0, 1.0);
 }

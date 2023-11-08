@@ -30,6 +30,6 @@ void main () {
     if (vU.y > 1.0) { U = -C.y; }
     if (vU.y < 0.0) { D = -C.y; }
 
-    float div = 0.5 * (R - L + F - B + U - D);
+    float div = 0.5 * (R - L + U - D);
     FragColor = vec4(div, 0.0, 0.0, 1.0);
 }

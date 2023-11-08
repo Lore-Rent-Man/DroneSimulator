@@ -13,8 +13,8 @@ uniform float radius;
 out vec4 FragColor;
 
 void main () {
-    vec2 p = vUv.xy - point.xy;
-    p.x *= aspectRatio;
+    vec3 p = vUv.xyz - point.xyz;
+    p.x *= aspectRatio; 
     vec3 splat = exp(-dot(p, p) / radius) * color;
     vec3 base = texture3D(uTarget, vUv).xyz;
     FragColor = vec4(base + splat, 1.0);

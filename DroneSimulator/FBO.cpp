@@ -33,3 +33,9 @@ unsigned int FBO::attach(unsigned int id) {
 	glBindTexture(GL_TEXTURE_3D, texture);
 	return id;
 }
+
+FBO::~FBO()
+{
+	glDeleteTextures(1, &texture);
+	glDeleteFramebuffers(1, &ID);
+}
