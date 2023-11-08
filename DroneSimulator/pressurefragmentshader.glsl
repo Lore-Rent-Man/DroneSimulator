@@ -14,6 +14,8 @@ varying highp vec3 vD;
 uniform sampler3D uPressure;
 uniform sampler3D uDivergence;
 
+out vec4 FragColor;
+
 void main () {
     float L = texture3D(uPressure, vL).x;
     float R = texture3D(uPressure, vR).x;
@@ -24,5 +26,5 @@ void main () {
     float C = texture3D(uPressure, vUv).x;
     float divergence = texture3D(uDivergence, vUv).x;
     float pressure = (L + R + B + F + D + U - divergence) / 6;
-    gl_FragColor = vec4(pressure, 0.0, 0.0, 1.0);
+    FragColor = vec4(pressure, 0.0, 0.0, 1.0);
 }

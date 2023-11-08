@@ -13,15 +13,18 @@
 #include "Camera.h"
 #include "Axes.h"
 #include "Fluid.h"
+#include <Windows.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+const float ASPECT_RATIO = SCR_WIDTH / SCR_HEIGHT;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));
 float lastX = SCR_WIDTH / 2.0f;
@@ -37,7 +40,10 @@ float k = 0.12265f;
 float b = 0.01f;
 
 //Fluid Simulation Variables
-const int SIZE = 8;
+const int F_W_SIZE = SCR_WIDTH;
+const int F_H_SIZE = SCR_HEIGHT;
+
+vector<splatPointer> sB;
 
 int main()
 {
@@ -47,6 +53,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_SAMPLES, 4);
 
     // glfw window creation
     // --------------------
@@ -60,6 +67,7 @@ int main()
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetScrollCallback(window, scroll_callback);
 
     // glad: load all OpenGL function pointers
@@ -72,8 +80,8 @@ int main()
 
     // configure global opengl state
     // -----------------------------
-    glEnable(GL_DEPTH_TEST);
-    glLineWidth(5.0);
+    //glEnable(GL_DEPTH_TEST);
+    //glLineWidth(5.0);
 
     // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
     // -------------------------------------------------------------------------------------------
@@ -88,19 +96,12 @@ int main()
 
     Circle c = Circle();*/
 
-    GLint drawFboId = 0, readFboId = 0;
+    glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
 
-    glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &drawFboId);
-    glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &readFboId);
+    Fluid f = Fluid(F_W_SIZE, F_H_SIZE, 1, SCR_WIDTH, SCR_HEIGHT);
 
-    cout << drawFboId << " " << readFboId << endl;
-
-
-    Fluid f = Fluid(SIZE, SIZE, SIZE);
-
-    glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &drawFboId);
-    glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &readFboId);
-
+    float frameRate = 0.01667;
 
     // render loop
     // -----------
@@ -109,14 +110,15 @@ int main()
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
         // input
         // -----
         processInput(window);
 
         // render
         // ------
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
+        //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        //glClear(GL_COLOR_BUFFER_BIT);
 
          // bind textures on corresponding texture units
 
@@ -136,6 +138,27 @@ int main()
         //c.setMVP(projection * view);
         //c.draw();
 
+        /*f.advectionShader.use();
+        glBindVertexArray(vao);
+        glDrawArrays(GL_TRIANGLES, 0, 3);*/
+
+        if (!sB.empty() && !sB[0].down)
+        {
+            sB.pop_back();
+        }
+        else if (!sB.empty())
+        {
+            if (sB[0].moved) {
+                sB[0].moved = false;
+                f.splat(sB[0]);
+            }
+        }
+        f.step(deltaTime);
+        f.render();
+
+        glFlush();
+        Sleep(10);
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -145,6 +168,8 @@ int main()
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
+    //glDeleteVertexArrays(1, &vao);
+    //glDeleteBuffers(1, &blitBuffer);
     glfwTerminate();
     return 0;
 }
@@ -197,7 +222,49 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
     lastY = ypos;
 
     camera.ProcessMouseMovement(xoffset, yoffset);
+
+    int pressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
+    if (pressed == GLFW_PRESS && !sB.empty())
+    {
+        sB[0].prevTexcoordX = sB[0].texcoordX;
+        sB[0].prevTexcoordY = sB[0].texcoordY;
+        sB[0].texcoordX = xpos / SCR_WIDTH;
+        sB[0].texcoordY = 1.0f - ypos / SCR_HEIGHT;
+        sB[0].deltaX = (sB[0].texcoordX - sB[0].prevTexcoordX) * ASPECT_RATIO;
+        sB[0].deltaY = (sB[0].texcoordY - sB[0].prevTexcoordY) * ASPECT_RATIO;
+        sB[0].moved = abs(sB[0].deltaX) > 0 || abs(sB[0].deltaY) > 0;
+    }
 }
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    struct find_id : std::unary_function<splatPointer, bool> {
+        DWORD id;
+        find_id(DWORD id) :id(id) { }
+        bool operator()(splatPointer const& m) const {
+            return m.id == id;
+        }
+    };
+
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    {
+        double xpos, ypos;
+        glfwGetCursorPos(window, &xpos, &ypos);
+        auto it = std::find_if(sB.begin(), sB.end(), find_id(-1));
+        if (it == sB.end())
+        { 
+            splatPointer p;
+            p.down = true;
+            p.texcoordX = xpos / SCR_WIDTH;
+            p.texcoordY = 1.0f - ypos / SCR_HEIGHT;            
+            sB.push_back(p);
+        }
+    }
+    else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE && !sB.empty()) {
+        sB[0].down = false;
+    }
+}
+
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------

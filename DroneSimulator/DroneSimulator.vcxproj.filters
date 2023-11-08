@@ -39,10 +39,10 @@
     <ClCompile Include="Fluid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DoubleFBO.cpp">
+    <ClCompile Include="FBO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FBO.cpp">
+    <ClCompile Include="DoubleFBO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -107,6 +107,12 @@
       <Filter>Source Files\Fluid Shaders</Filter>
     </None>
     <None Include="clearfragmentshader.glsl">
+      <Filter>Source Files\Fluid Shaders</Filter>
+    </None>
+    <None Include="splatfragmentshader.glsl">
+      <Filter>Source Files\Fluid Shaders</Filter>
+    </None>
+    <None Include="displayfragmentshader.glsl">
       <Filter>Source Files\Fluid Shaders</Filter>
     </None>
   </ItemGroup>

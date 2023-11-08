@@ -31,7 +31,5 @@ void DoubleFBO::write(FBO* value)
 
 void DoubleFBO::swap()
 {
-	FBO* temp = fbo1;
-	fbo1 = fbo2;
-	fbo2 = temp;
+	std::swap(fbo1, fbo2);
 }

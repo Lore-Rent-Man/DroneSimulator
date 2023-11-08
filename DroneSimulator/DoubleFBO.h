@@ -9,7 +9,7 @@ private:
 	FBO* fbo1;
 	FBO* fbo2;
 public:
-	int texelSizeX, texelSizeY, texelSizeZ;
+	float texelSizeX, texelSizeY, texelSizeZ;
 
 	DoubleFBO(int lx, int ly, int lz, GLint interalFormat, GLint format, GLint type, GLint param);
 	FBO* read();

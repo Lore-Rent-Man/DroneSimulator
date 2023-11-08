@@ -12,6 +12,8 @@ varying highp vec3 vU;
 varying highp vec3 vD;
 uniform sampler3D uVelocity;
 
+out vec4 FragColor;
+
 void main () {
     float L = texture3D(uVelocity, vL).x;
     float R = texture3D(uVelocity, vR).x;
@@ -29,5 +31,5 @@ void main () {
     if (vU.y < 0.0) { D = -C.y; }
 
     float div = 0.5 * (R - L + F - B + U - D);
-    gl_FragColor = vec4(div, 0.0, 0.0, 1.0);
+    FragColor = vec4(div, 0.0, 0.0, 1.0);
 }

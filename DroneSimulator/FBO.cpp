@@ -12,6 +12,7 @@ FBO::FBO(int lx, int ly, int lz, GLint interalFormat, GLint format, GLint type, 
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, param);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, param);
 	glTexImage3D(GL_TEXTURE_3D, 0, interalFormat, lx, ly, lz, 0, format, type, NULL);
@@ -23,6 +24,8 @@ FBO::FBO(int lx, int ly, int lz, GLint interalFormat, GLint format, GLint type, 
 	glGenFramebuffers(1, &this->ID);
 	glBindFramebuffer(GL_FRAMEBUFFER, this->ID);
 	glFramebufferTexture3D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_3D, this->texture, 0, 0);
+	glViewport(0, 0, lx, ly);
+	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 unsigned int FBO::attach(unsigned int id) {

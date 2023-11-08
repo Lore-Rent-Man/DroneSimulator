@@ -172,11 +172,13 @@
     <None Include="circlefragmentshader.glsl" />
     <None Include="circlevertexshader.glsl" />
     <None Include="clearfragmentshader.glsl" />
+    <None Include="displayfragmentshader.glsl" />
     <None Include="divergencefragmentshader.glsl" />
     <None Include="gradientfragmentshader.glsl" />
     <None Include="objectfragmentshader.glsl" />
     <None Include="objectvertexshader.glsl" />
     <None Include="pressurefragmentshader.glsl" />
+    <None Include="splatfragmentshader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

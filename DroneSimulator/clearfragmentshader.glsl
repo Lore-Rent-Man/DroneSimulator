@@ -5,6 +5,8 @@ varying highp vec3 vUv;
 uniform sampler3D uTexture;
 uniform float value;
 
+out vec4 FragColor;
+
 void main () {
-    gl_FragColor = value * texture3D(uTexture, vUv);
+    FragColor = value * texture3D(uTexture, vUv);
 }

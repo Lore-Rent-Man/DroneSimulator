@@ -3,16 +3,23 @@
 #define PRESSURE_VALUE 0.8
 #define PRESSURE_ITERATIONS 20
 #define VELOCITY_DISSIPATION 0.2
+#define DENSITY_DISSIPATION 1
+#define SPLAT_RADIUS 1.0
+#define SPLAT_FORCE 6000
 
-Fluid::Fluid(int lx, int ly, int lz) {
+Fluid::Fluid(int lx, int ly, int lz, int width, int height) {
 
 	this->lx = lx;
 	this->ly = ly;
 	this->lz = lz;
+	this->width = width;
+	this->height = height;
+	this->aspectRatio = float(this->width) / height;
 
-	velocity = new DoubleFBO(lx, ly, lz, GL_RGB, GL_RGB, GL_FLOAT, GL_LINEAR);
-	pressure = new DoubleFBO(lx, ly, lz, GL_RG, GL_RG, GL_FLOAT, GL_LINEAR);
-	divergence = new FBO(lx, ly, lz, GL_RED, GL_RED, GL_FLOAT, GL_LINEAR);
+	dye = new DoubleFBO(1024, 1024, lz, GL_RGBA, GL_RGBA, GL_FLOAT, GL_LINEAR);
+	velocity = new DoubleFBO(256, 256, lz, GL_RGB16F, GL_RGB, GL_FLOAT, GL_LINEAR);
+	pressure = new DoubleFBO(256, 256, lz, GL_RG, GL_RG, GL_FLOAT, GL_NEAREST);
+	divergence = new FBO(256, 256, lz, GL_RED, GL_RED, GL_FLOAT, GL_NEAREST);
 	
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
@@ -34,6 +41,34 @@ Fluid::Fluid(int lx, int ly, int lz) {
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
+void Fluid::splat(splatPointer p) {
+
+	float x = p.texcoordX;
+	float y = p.texcoordY;
+	float dx = p.deltaX * SPLAT_FORCE;
+	float dy = p.deltaY * SPLAT_FORCE;
+
+
+	glm::vec3 color = p.color;
+
+	splatShader.use();
+	splatShader.setInt("uTarget", velocity->read()->attach(0));
+	splatShader.setFloat("aspectRatio", aspectRatio);
+	splatShader.setVec3("point", glm::vec3{ x, y, 0.0f });
+	splatShader.setVec3("color", dx, dy, 0.0);
+	splatShader.setFloat("radius", SPLAT_RADIUS/100.0f * aspectRatio);
+	blit(velocity->write());
+	velocity->swap();
+
+	splatShader.setInt("uTarget", dye->read()->attach(0));
+	splatShader.setVec3("color", color);
+	blit(dye->write());
+	dye->swap();
 }
 
 void Fluid::step(float deltaTime) {
@@ -41,7 +76,7 @@ void Fluid::step(float deltaTime) {
 
 	glm::vec3 texelSize(velocity->texelSizeX, velocity->texelSizeY, velocity->texelSizeZ);
 
-	divergenceShader.use();
+	/*divergenceShader.use();
 	divergenceShader.setVec3("texelSize", texelSize);
 	divergenceShader.setInt("uVelocity", velocity->read()->attach(0));
 	blit(divergence);
@@ -67,35 +102,54 @@ void Fluid::step(float deltaTime) {
 	gradientSubtractShader.setInt("uPressure", pressure->read()->attach(0));
 	gradientSubtractShader.setInt("uVelocity", velocity->read()->attach(1));
 	blit(velocity->write());
-	velocity->swap();
+	velocity->swap();*/
 
 	advectionShader.use();
 	advectionShader.setVec3("texelSize", texelSize);
-	advectionShader.setInt("uVelocity", velocity->read()->attach(0));
-	advectionShader.setInt("uSource", velocity->read()->attach(0));
+	unsigned int velocityId = velocity->read()->attach(0);
+	advectionShader.setInt("uVelocity", velocityId);
+	advectionShader.setInt("uSource", velocityId);
 	advectionShader.setFloat("dt", deltaTime);
 	advectionShader.setFloat("dissipation", VELOCITY_DISSIPATION);
-	blit(velocity->write(), true);
+	blit(velocity->write());
 	velocity->swap();
+
+	advectionShader.setInt("uVelocity", velocity->read()->attach(0));
+	advectionShader.setInt("uSource", dye->read()->attach(1));
+	advectionShader.setFloat("dissipation", DENSITY_DISSIPATION);
+	blit(dye->write());
+	dye->swap();
+}
+
+void Fluid::render() {
+	glEnable(GL_BLEND);
+	displayShader.use();
+	displayShader.setInt("uVelocity", dye->read()->attach(0));
+	blit(NULL);
 }
 
 void Fluid::blit(FBO* target, bool clear) {
 	if (target == NULL)
 	{
-		glViewport(0, 0, GL_RENDERBUFFER_WIDTH, GL_RENDERBUFFER_HEIGHT);
-		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glViewport(0, 0, width, height);
 	}
 	else
 	{
-		glViewport(0, 0, target->lx, target->ly);
 		glBindFramebuffer(GL_FRAMEBUFFER, target->ID);
+		glViewport(0, 0, target->lx, target->ly);
 	}
 	if (clear)
 	{
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
-	glDrawArrays(GL_TRIANGLES, 0, 0);
+	glBindVertexArray(vao);
+	glDrawArrays(GL_TRIANGLES, 0, 6 * lz);
+}
+
+Fluid::~Fluid() {
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &blitBuffer);
 }
 
 

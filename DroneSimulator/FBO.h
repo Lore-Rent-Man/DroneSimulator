@@ -19,7 +19,7 @@ class FBO
 {
 public:
 	unsigned int texture, ID;
-	int texelSizeX, texelSizeY, texelSizeZ;
+	float texelSizeX, texelSizeY, texelSizeZ;
 	int lx, ly, lz;
 
 	FBO(int lx, int ly, int lz, GLint interalFormat, GLint format, GLint type, GLint param);
